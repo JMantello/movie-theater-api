@@ -6,13 +6,13 @@ const { Show } = require("../models/Show")
 const { sequelize } = require("../config/db");
 
 router.get("/", async (req, res) => {
-    res.send(await getUsers());
+    res.send(await User.findAll());
 })
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id
     const user = await User.findByPk(id)
-    res.send(await User.findAll())
+    res.send(user)
 })
 
 router.get("/:id/shows", async (req, res) => {
@@ -21,12 +21,24 @@ router.get("/:id/shows", async (req, res) => {
     res.send(shows)
 })
 
-router.put("/:id/addShow/:showID", async (req, res) => {
+router.put("/:id/shows/:showID", async (req, res) => {
     try {
+        // Find user and show
         const user = await User.findByPk(req.params.id)
         const show = await Show.findByPk(req.params.showID)
+
         user.addShow(show)
-        res.send(await User.findAll())
+
+        const updatedData = await User.findOne({
+            where: {
+                id: user.id
+            },
+            include: {
+                model: Show
+            }
+        })
+
+        res.send(updatedData)
     } catch {
         res.sendStatus(404)
     }
