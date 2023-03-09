@@ -17,7 +17,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/:id/shows", async (req, res) => {
     const user = await User.findByPk(req.params.id)
-    const shows = user.getShows()
+    const shows = await user.getShows()
     res.send(shows)
 })
 
