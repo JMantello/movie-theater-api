@@ -25,16 +25,18 @@ router.get("/genre/:genre", async (req, res) => {
     res.send(shows)
 })
 
-router.put("/rating/:id", async (req, res) => {
-    try {
-        const show = await Show.findByPk(req.params.id)
-        show.rating = req.body.rating
-        show.save()
-        res.send(await Show.findAll())
-    } catch {
-        res.sendStatus(404)
-    }
-})
+router.put("/rating/:id",
+    [check("rating").not().isEmpty().trim()],
+    async (req, res) => {
+        try {
+            const show = await Show.findByPk(req.params.id)
+            show.rating = req.body.rating
+            show.save()
+            res.send(await Show.findAll())
+        } catch {
+            res.sendStatus(404)
+        }
+    })
 
 router.put("/status/:id",
     [check("status").not().isEmpty().trim()],
