@@ -10,17 +10,19 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const show = await Show.findByPk(req.params.id)
-    res.send(show)
+    if (!show)
+        res.sendStatus(404)
+    else
+        res.send(show)
 })
 
 // Does not work
-router.get("/:genre", async (req, res) => {
+router.get("/genre/:genre", async (req, res) => {
     const shows = await Show.findAll({
         where: {
             genre: req.params.genre
         }
     })
-    console.log(shows)
     res.send(shows)
 })
 
