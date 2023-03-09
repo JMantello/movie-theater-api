@@ -25,7 +25,7 @@ router.get("/:genre", async (req, res) => {
 router.put("/rating/:id", async (req, res) => {
     try {
         const show = await Show.findByPk(req.params.id);
-        show.update(req.body);
+        show.rating = req.body.rating;
         res.send(await Show.findAll());
     } catch {
         res.sendStatus(404)
@@ -35,7 +35,7 @@ router.put("/rating/:id", async (req, res) => {
 router.put("/status/:id", async (req, res) => {
     try {
         const show = await Show.findByPk(req.params.id);
-        show.update(req.body);
+        show.status = req.body.status;
         res.send(await Show.findAll());
     } catch {
         res.sendStatus(404)
