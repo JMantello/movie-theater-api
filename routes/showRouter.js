@@ -28,12 +28,21 @@ router.get("/genre/:genre", async (req, res) => {
 router.put("/rating/:id",
     [check("rating").not().isEmpty().trim()],
     async (req, res) => {
+        // Validate against errors
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            res.status(400).json({ error: errors.array() })
+            return
+        }
+
+        // Try update Show rating
         try {
             const show = await Show.findByPk(req.params.id)
             show.rating = req.body.rating
             show.save()
             res.send(await Show.findAll())
         } catch {
+            // Show not found
             res.sendStatus(404)
         }
     })
@@ -42,17 +51,21 @@ router.put("/status/:id",
     [check("status").not().isEmpty().trim()],
     [check("status").isLength({ min: 5, max: 25 })],
     async (req, res) => {
+        // Validate against errors
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
             res.status(400).json({ error: errors.array() })
             return
         }
+
+        // Try update Show status
         try {
             const show = await Show.findByPk(req.params.id)
             show.status = req.body.status
             show.save()
             res.send(await Show.findAll())
         } catch {
+            // Show not found
             res.sendStatus(404)
         }
     })
